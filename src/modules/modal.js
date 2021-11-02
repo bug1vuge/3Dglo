@@ -3,23 +3,30 @@ const modalModule = () => {
     const modal = document.querySelector('.popup');
     const modalContent = modal.querySelector('.popup-content');
     const closeBtn = modal.querySelector('.popup-close');
+
     let count = 0;
+    let requestAnimation;
 
     const animateModal = () => {
-        let screenWidthHalf = parseInt((window.innerWidth / 2) - 150);
+        let screenWidthHalf = parseInt((screen.width / 2) - 130);
 
         modalContent.style.left = `${count}px`;
-        count += 40;
+        count += 50;
 
         if (count < screenWidthHalf) {
-            requestAnimationFrame(animateModal);
+            requestAnimation = requestAnimationFrame(animateModal);
+        }
+
+        if (screen.width <= 768) {
+            cancelAnimationFrame(requestAnimation);
+            modalContent.style.left = `${screenWidthHalf}px`;
         }
     }
 
     buttons.forEach((btn) => {
         btn.addEventListener('click', () => {
             modal.style.display = 'block';
-            requestAnimationFrame(animateModal);
+            animateModal();
         });
     });
 
