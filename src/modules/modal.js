@@ -8,7 +8,7 @@ const modalModule = () => {
     let requestAnimation;
 
     const animateModal = () => {
-        let screenWidthHalf = parseInt((screen.width / 2) - 130);
+        let screenWidthHalf = parseInt((screen.width / 2) - 150);
 
         modalContent.style.left = `${count}px`;
         count += 50;
