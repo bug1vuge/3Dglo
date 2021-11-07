@@ -10,6 +10,6 @@ timer('31 october 2021');
 menu();
 modal();
 validation();
-tabs()
-slider()
-calc(100)
+tabs();
+slider();
+calc(100);
