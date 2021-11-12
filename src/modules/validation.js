@@ -7,7 +7,7 @@ const validationModule = () => {
 
     nameInputs.forEach((nameInput) => {
         nameInput.addEventListener('input', () => {
-            nameInput.value = nameInput.value.replace(/[^а-яА-Я \-]/g, '');
+            nameInput.value = nameInput.value.replace(/[^а-яА-Я ]/g, '');
         });
     });
 
@@ -19,13 +19,13 @@ const validationModule = () => {
 
     phoneInputs.forEach((phoneInput) => {
         phoneInput.addEventListener('input', () => {
-            phoneInput.value = phoneInput.value.replace(/[^0-9() \-]/g, '');
+            phoneInput.value = phoneInput.value.replace(/[^0-9 \+]/g, '');
         });
     });
 
     messageInputs.forEach((messageInputs) => {
         messageInputs.addEventListener('input', () => {
-            messageInputs.value = messageInputs.value.replace(/[^а-яА-Я \-]/g, '');
+            messageInputs.value = messageInputs.value.replace(/[^а-яА-Я0-9 \-\,\.\!\?]/g, '');
         });
     });
 
