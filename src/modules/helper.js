@@ -2,8 +2,9 @@ const animateModal = (el) => {
     let count = 0;
     let requestAnimation;
 
+
     const animateModalFunc = () => {
-        let screenWidthHalf = parseInt((screen.width / 2) - 150);
+        let screenWidthHalf = Math.ceil((window.innerWidth / 2) - 125);
 
         el.style.left = `${count}px`;
         count += 50;
@@ -14,7 +15,15 @@ const animateModal = (el) => {
 
         if (screen.width <= 768) {
             cancelAnimationFrame(requestAnimation);
-            el.style.left = `${screenWidthHalf}px`;
+            el.style.left = `${screenWidthHalf - 39}px`;
+        }
+
+        if (screen.width <= 375) {
+            el.style.left = `${screenWidthHalf - 13}px`;
+        }
+
+        if (screen.width <= 320) {
+            el.style.left = `${screenWidthHalf + 15}px`;
         }
     }
 
