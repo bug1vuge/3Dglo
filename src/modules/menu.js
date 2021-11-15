@@ -8,6 +8,7 @@ const menuModule = () => {
 
     menuBlock.addEventListener('click', (e) => {
         if (e.target.classList.contains('close-btn') || e.target.tagName === 'A') {
+            e.preventDefault();
             menuBlock.classList.remove('active-menu');
         }
     });
