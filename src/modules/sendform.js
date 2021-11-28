@@ -1,6 +1,7 @@
 const sendFormModule = (formId) => {
     const form = document.getElementById(formId);
     const formInputs = form.querySelectorAll('input');
+    const modal = document.querySelector('.popup');
 
     const statusBlock = document.createElement('div');
     const loadText = 'Загрузка...';
@@ -80,14 +81,25 @@ const sendFormModule = (formId) => {
                 setTimeout(() => {
                     statusBlock.textContent = '';
                     form.reset();
+
+                    if (modal) {
+                        modal.style.display = 'none';
+                    };
+
                 }, 1500);
-            })
 
+                isFilled = false;
+                isNameValid = false;
+                isPhoneValid = false;
+                isEmailValid = false;
 
-            isFilled = false;
-            isNameValid = false;
-            isPhoneValid = false;
-            isEmailValid = false;
+            }).catch(() => {
+                statusBlock.textContent = errorText;
+
+                setTimeout(() => {
+                    statusBlock.textContent = '';
+                }, 2000);
+            });
 
         } else {
             statusBlock.textContent = errorText;
