@@ -48,6 +48,8 @@ const timerModule = (deadline) => {
         }
     };
 
+    updateTimer();
+
     isTimerUpdate = setInterval(updateTimer, 1000);
 };
 

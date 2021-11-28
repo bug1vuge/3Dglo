@@ -1,54 +1,21 @@
-const sendFormModule = (idForm) => {
-    const modal = document.querySelector('.popup');
-    const form = document.getElementById(idForm);
+const sendFormModule = (formId) => {
+    const form = document.getElementById(formId);
+    const formInputs = form.querySelectorAll('input');
+
     const statusBlock = document.createElement('div');
     const loadText = 'Загрузка...';
-    const errorText = 'Ошибка...';
+    const errorText = 'Проверьте правильность заполнения полей';
     const successText = 'Спасибо! Наш менеджер с вами свяжется!';
 
-    const regExpName = /^[а-яА-Я\s]{2,}/g;
-    const regExpPhone = /^[0-9 \+]{7,13}/g;
+    const regExpName = /^[а-яА-ЯёЁa-zA-Z]{2,}$/g;
+    const regExpPhone = /^\+\d{7,16}/g;
+
+    let isFilled = false;
+    let isNameValid = false;
+    let isPhoneValid = false;
+    let isEmailValid = false;
 
     statusBlock.style.color = '#fff';
-
-    const checkingInputsValue = (callback) => {
-        const formInputs = form.querySelectorAll('input')
-        const nameInput = form.querySelector('input[name=user_name]');
-        const phoneInput = form.querySelector('input[name=user_phone]');
-        const emailInput = form.querySelector('input[name=user_email]');
-
-        if (emailInput.value !== '' && regExpName.test(nameInput.value) && regExpPhone.test(phoneInput.value)) {
-            callback();
-        } else {
-            alert('Проверьте правильность заполнения полей!')
-        }
-    };
-
-    const validateElem = (elem) => {
-        if (elem.name === 'user_name') {
-            elem.value = elem.value.replace(/[^а-яА-Я ]/g, '');
-        };
-
-        if (elem.name === 'user_email') {
-            elem.value = elem.value.replace(/[^a-zA-Z0-9\@\-\_\.\!\~\*\']/g, '');
-        };
-
-        if (elem.name === 'user_phone') {
-            elem.value = elem.value.replace(/[^0-9 \+\(\)]/g, '').slice(0, 13);
-        };
-
-        if (elem.name === 'user_message') {
-            elem.value = elem.value.replace(/[^а-яА-Я0-9 \-\,\.\!\?]/g, '');
-        };
-    };
-
-    for (let elem of form.elements) {
-        if (elem.tagName === 'INPUT') {
-            elem.addEventListener('input', () => {
-                validateElem(elem)
-            });
-        }
-    }
 
     const sendData = (data) => {
         return fetch('https://jsonplaceholder.typicode.com/posts', {
@@ -57,58 +24,79 @@ const sendFormModule = (idForm) => {
             headers: {
                 'Content-Type': 'application/json'
             }
+
         }).then(res => res.json());
     };
 
-    const submitForm = () => {
-        const formElems = form.querySelectorAll('input')
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         const formData = new FormData(form);
         const formBody = {};
+        let inputsVal = [];
 
         statusBlock.textContent = loadText;
         form.append(statusBlock);
 
-        formData.forEach((value, key) => {
-            formBody[key] = value;
-        })
+        formData.forEach((val, key) => {
+            formBody[key] = val;
+        });
 
-        sendData(formBody)
-            .then(() => {
+
+        formInputs.forEach(el => {
+
+            if (el.value) {
+                inputsVal.push(el.value);
+            };
+
+            if (el.name === 'user_name') {
+                if (regExpName.test(el.value)) {
+                    isNameValid = true;
+                };
+            };
+
+            if (el.name === 'user_phone') {
+                if (regExpPhone.test(el.value)) {
+                    isPhoneValid = true;
+                };
+            };
+
+            if (el.name === 'user_email') {
+                if (el.value) {
+                    isEmailValid = true;
+                }
+            }
+
+        });
+
+        if (inputsVal.length > 0 && inputsVal.length <= 4) {
+            isFilled = true;
+        }
+
+        if (isFilled && isNameValid && isPhoneValid && isEmailValid) {
+            sendData(formBody).then(() => {
                 statusBlock.textContent = successText;
-
-                formElems.forEach((input) => {
-                    input.value = '';
-                });
 
                 setTimeout(() => {
                     statusBlock.textContent = '';
+                    form.reset();
                 }, 1500);
             })
-            .catch(() => {
-                statusBlock.textContent = errorText;
-            })
 
-    };
 
-    try {
-        if (!form) {
-            throw new Error('Верните форму на место, пожааалуйста))')
-        }
+            isFilled = false;
+            isNameValid = false;
+            isPhoneValid = false;
+            isEmailValid = false;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            checkingInputsValue(submitForm);
+        } else {
+            statusBlock.textContent = errorText;
 
-            if (window.getComputedStyle(modal).display === 'block') {
-                setInterval(() => {
-                    modal.style.display = 'none';
-                }, 3000);
-            }
-        });
-    } catch (error) {
-        console.log(error.message);
-    }
-
+            setTimeout(() => {
+                statusBlock.textContent = '';
+            }, 2000);
+        };
+    });
 };
 
 export default sendFormModule;

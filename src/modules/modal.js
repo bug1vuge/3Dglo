@@ -1,12 +1,14 @@
 import { animateModal } from "./helper";
 
 const modalModule = () => {
-    const buttons = document.querySelectorAll('.popup-btn');
     const modal = document.querySelector('.popup');
+    const openModalButtons = document.querySelectorAll('.popup-btn');
     const modalContent = document.querySelector('.popup-content');
 
-    buttons.forEach((btn) => {
-        btn.addEventListener('click', () => {
+    openModalButtons.forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+
             modal.style.display = 'block';
             animateModal(modalContent);
         });
@@ -17,7 +19,6 @@ const modalModule = () => {
             modal.style.display = 'none';
         }
     });
-
 };
 
 export default modalModule;
